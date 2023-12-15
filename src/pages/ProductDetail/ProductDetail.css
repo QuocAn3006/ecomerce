@@ -1,0 +1,9 @@
+.ant-input-number-handler-wrap {
+	display: none !important;
+}
+.ant-input-number.ant-input-number-sm > .ant-input-number-handler-wrap {
+	display: none !important;
+}
+.ant-input-number.ant-input-number-sm > input {
+	text-align: center;
+}

@@ -1,0 +1,11 @@
+.slick-slider.slick-initialized {
+	display: none;
+}
+.slick-track {
+	text-align: center;
+}
+@media screen and (min-width: 768px) {
+	.slick-slider.slick-initialized {
+		display: block;
+	}
+}
