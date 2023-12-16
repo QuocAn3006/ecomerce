@@ -19,8 +19,6 @@ import {
 	removeAllOrderProduct,
 	removeOrderProduct
 } from '../../redux/slide/orderSlide';
-import { PayPalButton } from 'react-paypal-button-v2';
-import * as PaymentService from '../../services/PaymentService';
 
 const PaymentPage = () => {
 	const orders = useSelector(state => state?.order);
@@ -30,7 +28,6 @@ const PaymentPage = () => {
 	const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
 	const [delivery, setDelivery] = useState('fast');
 	const [payment, setPayment] = useState('later-money');
-	const [sdkReady, setSdkReady] = useState(false);
 	const [stateUserDetail, setStateUserDetail] = useState({
 		name: '',
 		phone: '',
@@ -202,43 +199,41 @@ const PaymentPage = () => {
 		dispatch(removeOrderProduct({ idProduct }));
 	};
 
-	const addPaypalScript = async () => {
-		const { data } = await PaymentService.getConfig();
-		const script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = `https://www.paypal.com/sdk/js?client-id=${data}&components=buttons`;
-		script.async = true;
-		script.onload = () => {
-			setSdkReady(true);
-		};
-		document.body.appendChild(script);
-	};
-	const onSuccessPaypal = details => {
-		mutationCreateOrder.mutate({
-			token: user?.access_token,
-			orderItems: orders?.orderItemsSelected,
-			fullName: user?.name,
-			address: user?.address,
-			phone: user?.phone,
-			city: user?.city,
-			paymentMethod: payment,
-			itemPrice: priceMemo,
-			shippingPrice: priceDeliveryMemo,
-			totalPrice: totalPriceMemo,
-			user: user?.id,
-			isPaid: true,
-			paidAt: details.update_time,
-			email: user?.email
-		});
-	};
+	// const addPaypalScript = async () => {
+	// 	const { data } = await PaymentService.getConfig();
+	// 	setClientId(data);
+	// };
+	// const initialOptions = {
+	// 	clientId: clientId,
+	// 	intent: 'capture'
+	// };
+	// const onCreateOder = () => {
+	// 	return mutationCreateOrder.mutate({
+	// 		token: user?.access_token,
+	// 		orderItems: orders?.orderItemsSelected,
+	// 		fullName: user?.name,
+	// 		address: user?.address,
+	// 		phone: user?.phone,
+	// 		city: user?.city,
+	// 		paymentMethod: payment,
+	// 		itemPrice: priceMemo,
+	// 		shippingPrice: priceDeliveryMemo,
+	// 		totalPrice: totalPriceMemo,
+	// 		user: user?.id,
+	// 		isPaid: true,
+	// 		email: user?.email
+	// 	});
+	// };
 
-	useEffect(() => {
-		if (!window.paypal) {
-			addPaypalScript();
-		} else {
-			setSdkReady(true);
-		}
-	}, []);
+	// const onApprove = data => {
+	// 	console.log(data);
+	// };
+
+	// useEffect(() => {
+	// 	if (!window.paypal) {
+	// 		addPaypalScript();
+	// 	}
+	// }, []);
 
 	useEffect(() => {
 		form.setFieldsValue(stateUserDetail);
@@ -498,20 +493,28 @@ const PaymentPage = () => {
 								</div>
 							</div>
 
-							{payment === 'paypal' && sdkReady ? (
-								<div
-									style={{ width: '100%', marginTop: '14px' }}
-								>
-									<PayPalButton
-										amount={Math.round(
-											totalPriceMemo / 30000
-										)}
-										onSuccess={onSuccessPaypal}
-										onError={() => {
-											alert('error');
-										}}
-									/>
-								</div>
+							{payment === 'paypal' ? (
+								<ButtonComponent
+									onClick={() =>
+										message.warning(
+											'hiện chức năng này chưa thực hiện được'
+										)
+									}
+									size={40}
+									styleButton={{
+										background: 'rgb(255, 57, 69)',
+										height: '48px',
+										width: '100%',
+										border: 'none',
+										borderRadius: '4px',
+										margin: '26px 0 10px'
+									}}
+									textButton={'Đặt hàng'}
+									styleTextButton={{
+										color: '#fff',
+										fontSize: '16px'
+									}}
+								></ButtonComponent>
 							) : (
 								<ButtonComponent
 									onClick={handlePayment}

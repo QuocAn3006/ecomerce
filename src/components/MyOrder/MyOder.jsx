@@ -11,9 +11,11 @@ import { Image, message } from 'antd';
 import { convertPrice } from '../../utils';
 import { useMutationHook } from '../../hook/useMutationHook';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const MyOrder = props => {
 	const { id, token } = props;
+	const user = useSelector(state => state?.user);
 
 	const fetchMyOrder = async () => {
 		const res = await OrderService.getOrderById(id, token);
@@ -36,9 +38,9 @@ const MyOrder = props => {
 		mutation.mutate(
 			{
 				id: order._id,
-				token: token,
+				token: user.access_token,
 				orderItems: order?.orderItems,
-				userId: id
+				userId: user.id
 			},
 			{ onSuccess: () => queryOrder.refetch() }
 		);
