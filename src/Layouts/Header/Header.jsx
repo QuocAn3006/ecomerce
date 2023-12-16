@@ -11,6 +11,7 @@ import { resetUser } from '../../redux/slide/userSlice';
 import Loading from '../../components/Loading/LoadingComponent';
 import { useDebounce } from '../../hook/useDebounce';
 import { useQuery } from '@tanstack/react-query';
+import { convertPrice } from '../../utils';
 
 const Header = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -150,7 +151,10 @@ const Header = () => {
 											/>
 											<span>{product?.name}</span>
 										</div>
-										<span>{product?.price}</span>
+										<span>
+											{convertPrice(product?.price)}
+											<sup>đ</sup>
+										</span>
 									</div>
 								))}
 							</div>
